@@ -1,0 +1,25 @@
+beginKripke
+STATES : [S0, S1, S2]
+TRANSITIONS : 
+[
+	S0 : S1,
+	S1 : S2,
+	S2 : S2,
+	S2 : S1,
+	S1 : S0
+]
+LABELS : 
+[
+	S0 : [	p,	q],
+	S1 : [	p ], 
+	S2 : [ q] 
+]
+endKripke
+
+beginCTL
+AG p
+endCTL
+
+
+
+	
