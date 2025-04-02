@@ -17,7 +17,7 @@ unsigned int hash(char* str) {
     return hash % TABLE_SIZE;
 }
 
-// Initialize hash set
+
 void initSet(HashSet* set) {
     if (set == NULL) {
         printf("Error: HashSet is NULL\n");
@@ -30,7 +30,7 @@ void initSet(HashSet* set) {
 }
 
 
-// Check if key exists in set
+
 bool contains(HashSet* set, state* key ) {
     unsigned int index = hash(key->name);
     Node* node = set->buckets[index];
@@ -41,7 +41,7 @@ bool contains(HashSet* set, state* key ) {
     return false;
 }
 
-// Insert into set
+
 void add(HashSet* set, state* key) {
     if (set == NULL || key == NULL || key->name == NULL) {
         printf("Error: Invalid state or HashSet\n");
@@ -61,7 +61,7 @@ void add(HashSet* set, state* key) {
 }
 
 
-// Remove from set
+
 void removeElement(HashSet* set, state* key) {
     unsigned int index = hash(key->name);
     Node* node = set->buckets[index], *prev = NULL;
