@@ -3,19 +3,19 @@ STATES : [S0, S1, S2]
 TRANSITIONS : 
 [
 	S0 : S1,
-	S1 : S2,
+	S1 : S1,
+	S0 : S2,
 	S2 : S2
 ]
 LABELS : 
 [
-	S0 : [	p ],
-	S1 : [	p,q ], 
-	S2 : [ p] 
+	S1 : [	p ],
+	S2 : [q]
 ]
 endKripke
 
 beginCTL
-T
+(AF (p) | AF(q))
 endCTL
 
 

@@ -1,9 +1,0 @@
-{
-	"files.associations": {
-		"Makefile": "makefile",
-		"kripke.h": "c",
-		"queue.h": "c",
-		"model_checker.h": "c",
-		"set.h": "c"
-	}
-}

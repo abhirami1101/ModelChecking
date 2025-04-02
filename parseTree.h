@@ -20,5 +20,6 @@ typedef struct treeNode{
 treeNode* createNode(ops op, char prop_var, treeNode* left, treeNode* right);
 
 void printTree(treeNode* root, int depth);
+void printTree_infix(treeNode* root);
 
 #endif

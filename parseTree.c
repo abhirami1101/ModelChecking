@@ -15,7 +15,7 @@ treeNode* createNode(ops op, char prop_var, treeNode* left, treeNode* right){
 	return new;
 }
 
-void printTree(treeNode* root,int depth) {
+void printTree_infix(treeNode* root) {
     if (!root) return;
 
     if (root->op == PROP_VAR_OP) {
@@ -31,13 +31,13 @@ void printTree(treeNode* root,int depth) {
             case EG_OP: printf("EG "); break;
             default: break;
         }
-        printTree(root->right,0);
+        printTree_infix(root->right);
         printf(")");
         return;
     }
 
     printf("(");
-    printTree(root->left,0);
+    printTree_infix(root->left);
 
     switch (root->op) {
         case AND_OP: printf(" ∧ "); break;
@@ -47,6 +47,33 @@ void printTree(treeNode* root,int depth) {
         default: break;
     }
 
-    printTree(root->right,0);
+    printTree_infix(root->right);
     printf(")");
+}
+
+void printTree(treeNode* root, int depth) {
+    if (root == NULL) {
+        return;
+    }
+
+    for (int i = 0; i < depth; i++) {
+        printf("|  ");
+    }
+
+
+    switch (root->op) {
+        case EX_OP: printf("EX"); break;
+        case EG_OP: printf("EG"); break;
+        case EU_OP: printf("EU"); break;
+        case AND_OP: printf("AND"); break;
+        case OR_OP: printf("OR"); break;
+        case NOT_OP: printf("NOT"); break;
+        case IMPLIES_OP: printf("IMPLIES"); break;
+        case PROP_VAR_OP: printf("PROP_VAR(%c)", root->prop_var); break;
+        default: printf("UNKNOWN"); break;
+    }
+    printf(" (Node ID: %d)\n", root->node_id);
+
+    printTree(root->left, depth + 1);
+    printTree(root->right, depth + 1);
 }

@@ -60,8 +60,11 @@ Input : kripke ctlformula{
 	printKripke(ks);
 	root_ctl = $2;
     printf("\n----------------------------\n");
-    printf("The CTL formula is (infix of the tree) \n");
+    printf("The CTL formula is (Tree form) \n");
 	printTree(root_ctl, 0);
+    printf("\n----------------------------\n");
+    printf("The CTL formula is (Readable form) \n");
+	printTree_infix(root_ctl);
     printf("\n----------------------------\n");
     printf("The States satisfying the formula is \n");
     printSet(root_ctl->sat);
