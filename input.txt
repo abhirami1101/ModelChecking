@@ -17,7 +17,7 @@ LABELS :
 endKripke
 
 beginCTL
-AG p
+p | q
 endCTL
 
 

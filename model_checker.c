@@ -2,6 +2,7 @@
 #include "parseTree.h"
 #include "model_checker.h"
 #include "Set.h"
+#include <sys/queue.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -9,45 +10,67 @@
 
 #define MAX_STATES 100 
 
-HashSet stateSatisfies[MAX_STATES];
 
-HashSet* HandleEU(KripkeStructure* ks, treeNode* formula){
-	HashSet* sformula;
-	initSet(sformula);
+void checkProp(KripkeStructure* ks, treeNode* node){
 	StateNode* states = ks->states;
-	while (states){
-		
-		if(checkSat(formula->right, states->s))
-			{add(sformula, states->s);
-			addCTL( formula, states->s);}
-	}
-	states = ks->states;
-	while (states){
-		if(checkSat(formula, states->s)){
-			continue;
+	if (node->prop_var == 'T'){
+		while(states){
+			state* State = states->s;
+			add(node->sat, State);		
+			states = states->next;
 		}
-		for (int i = 0; i < states->s->num_adj; i++){
-			state* neighbour =  states->s->adj[i];
-			if (checkSat(formula->left, neighbour)){
-				int flag = 0;
-				for (int j = 0; j <neighbour->num_adj; j++ ){
-					if(checkSat(formula, neighbour->adj[j]))
-					{	flag = 1;
-						break;
-					}
-				}
-				if (flag == 1){
-					add(sformula, );
-				}
+		return;
+	}
+	if (node->prop_var == 'F'){
+		return;
+	}
+	while(states){
+		state* State = states->s;
+		label* label = State->labelset;
+		while (label){
+			if (label->prop_var == node->prop_var){
+				add(node->sat, State);
+				break;
 			}
+			label = label->next;
 		}
+		states = states->next;
+
 	}
-
-
-
-
-
-
-
 }
+
+void checkAnd(KripkeStructure* ks, treeNode* node){
+	StateNode* states = ks->states;
+	while(states){
+		state* State = states->s;
+		bool flag1 = contains(node->left->sat,State);
+		bool flag2 = contains(node->right->sat,State);
+		if (flag1 && flag2){
+			add(node->sat, State);
+		}
+		states = states->next;
+
+	}
+}
+
+void checkNot(KripkeStructure* ks, treeNode* node){
+	StateNode* states = ks->states;
+	while(states){
+		state* State = states->s;
+		bool flag1 = contains(node->right->sat,State);
+		if (!flag1){
+			add(node->sat, State);
+		}
+		states = states->next;
+
+	}
+}
+
+
+
+
+
+
+
+
 

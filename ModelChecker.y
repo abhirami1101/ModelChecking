@@ -5,7 +5,7 @@ int yylex();
 #include <string.h>
 #include "parseTree.h"
 #include "kripke.h"
-// #include "model_checker.h"
+#include "model_checker.h"
 void yyerror(const char *s);
 treeNode* root_ctl;
 // KripkeStructure* ks;
@@ -208,27 +208,52 @@ ctlformula : BEGCTL formula ENDCTL {
 
 formula  
     : LPAREN formula RPAREN { $$ = $2; }
-    | formula AND formula { $$ = createNode(AND_OP, 0, $1, $3); }
+    | formula AND formula { $$ = createNode(AND_OP, 0, $1, $3); 
+    checkAnd(ks,$$);
+    printf("For and : \n");
+    printSet($$->sat);}
     | formula OR formula {
         treeNode* node1 = createNode(NOT_OP, 0, NULL, $1);
+        checkNot(ks,node1);
         treeNode* node2 = createNode(NOT_OP, 0, NULL, $3);
+        checkNot(ks,node2);
         treeNode* node3 = createNode(AND_OP, 0, node1, node2);
+        checkAnd(ks,node3);
 		$$ = createNode(NOT_OP, 0, NULL, node3); 
+        checkNot(ks,$$);
+        printf("For or : \n");
+        printSet($$->sat);
+
 }
     | formula IMPLIES formula { 
 		// $$ = createNode(IMPLIES_OP, 0, $1, $3);
         treeNode* node1 = createNode(NOT_OP, 0, NULL, $3);
+        checkNot(ks,node1);
         treeNode* node2 = createNode(AND_OP, 0, $1, node1);
+        checkAnd(ks,node2);
 		$$ = createNode(NOT_OP, 0, NULL, node2);
+        checkNot(ks,$$);
+        printf("For implies : \n");
+        printSet($$->sat);
+
 
  }
     | NOT formula %prec NOT { $$ = createNode(NOT_OP, 0, NULL, $2); 
+    checkNot(ks,$$);
+    printf("For not : \n");
+    printSet($$->sat);
 }
     | PROP_VAR { $$ = createNode(PROP_VAR_OP, $1, NULL, NULL); 
+    // printKripke(ks);
+    checkProp(ks, $$); 
+    printf("For variable : \n");
+    printSet($$->sat);
  }
     | TOP { $$ = createNode(PROP_VAR_OP, 'T', NULL, NULL); 
+    checkProp(ks, $$);
  }
-    | BOTTOM { $$ = createNode(PROP_VAR_OP, 'F', NULL, NULL); }
+    | BOTTOM { $$ = createNode(PROP_VAR_OP, 'F', NULL, NULL); 
+    checkProp(ks, $$);}
     | AG formula  %prec AG  { 
 		treeNode* node1 = createNode(NOT_OP, 0, NULL, $2);
         treeNode* node2 = createNode(PROP_VAR_OP, 'T', NULL,NULL);

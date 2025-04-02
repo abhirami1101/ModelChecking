@@ -134,7 +134,7 @@ int yylex();
 #include <string.h>
 #include "parseTree.h"
 #include "kripke.h"
-// #include "model_checker.h"
+#include "model_checker.h"
 void yyerror(const char *s);
 treeNode* root_ctl;
 // KripkeStructure* ks;
@@ -492,8 +492,8 @@ static const yytype_uint16 yyrline[] =
 {
        0,    56,    56,    65,    98,   102,   112,   123,   127,   131,
      140,   144,   156,   157,   163,   171,   175,   187,   193,   197,
-     205,   210,   211,   212,   218,   225,   227,   229,   231,   232,
-     238,   240,   246,   248,   254,   258,   271
+     205,   210,   211,   215,   228,   241,   246,   252,   255,   257,
+     263,   265,   271,   273,   279,   283,   296
 };
 #endif
 
@@ -1667,55 +1667,80 @@ yyreduce:
 
   case 22:
 #line 211 "ModelChecker.y"
-    { (yyval.node) = createNode(AND_OP, 0, (yyvsp[(1) - (3)].node), (yyvsp[(3) - (3)].node)); }
+    { (yyval.node) = createNode(AND_OP, 0, (yyvsp[(1) - (3)].node), (yyvsp[(3) - (3)].node)); 
+    checkAnd(ks,(yyval.node));
+    printf("For and : \n");
+    printSet((yyval.node)->sat);}
     break;
 
   case 23:
-#line 212 "ModelChecker.y"
+#line 215 "ModelChecker.y"
     {
         treeNode* node1 = createNode(NOT_OP, 0, NULL, (yyvsp[(1) - (3)].node));
+        checkNot(ks,node1);
         treeNode* node2 = createNode(NOT_OP, 0, NULL, (yyvsp[(3) - (3)].node));
+        checkNot(ks,node2);
         treeNode* node3 = createNode(AND_OP, 0, node1, node2);
+        checkAnd(ks,node3);
 		(yyval.node) = createNode(NOT_OP, 0, NULL, node3); 
+        checkNot(ks,(yyval.node));
+        printf("For or : \n");
+        printSet((yyval.node)->sat);
+
 }
     break;
 
   case 24:
-#line 218 "ModelChecker.y"
+#line 228 "ModelChecker.y"
     { 
 		// $$ = createNode(IMPLIES_OP, 0, $1, $3);
         treeNode* node1 = createNode(NOT_OP, 0, NULL, (yyvsp[(3) - (3)].node));
+        checkNot(ks,node1);
         treeNode* node2 = createNode(AND_OP, 0, (yyvsp[(1) - (3)].node), node1);
+        checkAnd(ks,node2);
 		(yyval.node) = createNode(NOT_OP, 0, NULL, node2);
+        checkNot(ks,(yyval.node));
+        printf("For implies : \n");
+        printSet((yyval.node)->sat);
+
 
  }
     break;
 
   case 25:
-#line 225 "ModelChecker.y"
+#line 241 "ModelChecker.y"
     { (yyval.node) = createNode(NOT_OP, 0, NULL, (yyvsp[(2) - (2)].node)); 
+    checkNot(ks,(yyval.node));
+    printf("For not : \n");
+    printSet((yyval.node)->sat);
 }
     break;
 
   case 26:
-#line 227 "ModelChecker.y"
+#line 246 "ModelChecker.y"
     { (yyval.node) = createNode(PROP_VAR_OP, (yyvsp[(1) - (1)].prop_var), NULL, NULL); 
+    // printKripke(ks);
+    checkProp(ks, (yyval.node)); 
+    printf("For variable : \n");
+    printSet((yyval.node)->sat);
  }
     break;
 
   case 27:
-#line 229 "ModelChecker.y"
+#line 252 "ModelChecker.y"
     { (yyval.node) = createNode(PROP_VAR_OP, 'T', NULL, NULL); 
+    checkProp(ks, (yyval.node));
  }
     break;
 
   case 28:
-#line 231 "ModelChecker.y"
-    { (yyval.node) = createNode(PROP_VAR_OP, 'F', NULL, NULL); }
+#line 255 "ModelChecker.y"
+    { (yyval.node) = createNode(PROP_VAR_OP, 'F', NULL, NULL); 
+    checkProp(ks, (yyval.node));}
     break;
 
   case 29:
-#line 232 "ModelChecker.y"
+#line 257 "ModelChecker.y"
     { 
 		treeNode* node1 = createNode(NOT_OP, 0, NULL, (yyvsp[(2) - (2)].node));
         treeNode* node2 = createNode(PROP_VAR_OP, 'T', NULL,NULL);
@@ -1725,13 +1750,13 @@ yyreduce:
     break;
 
   case 30:
-#line 238 "ModelChecker.y"
+#line 263 "ModelChecker.y"
     { (yyval.node) = createNode(EG_OP, 0, NULL, (yyvsp[(2) - (2)].node));
  }
     break;
 
   case 31:
-#line 240 "ModelChecker.y"
+#line 265 "ModelChecker.y"
     { 
 
 		treeNode* node1 = createNode(NOT_OP, 0, NULL, (yyvsp[(2) - (2)].node));
@@ -1741,13 +1766,13 @@ yyreduce:
     break;
 
   case 32:
-#line 246 "ModelChecker.y"
+#line 271 "ModelChecker.y"
     { (yyval.node) = createNode(EU_OP, 0, createNode(PROP_VAR_OP, 'T', NULL,NULL), (yyvsp[(2) - (2)].node)); 
 }
     break;
 
   case 33:
-#line 248 "ModelChecker.y"
+#line 273 "ModelChecker.y"
     { 
 
 		treeNode* node0 = createNode(NOT_OP, 0, NULL, (yyvsp[(2) - (2)].node));
@@ -1757,7 +1782,7 @@ yyreduce:
     break;
 
   case 34:
-#line 254 "ModelChecker.y"
+#line 279 "ModelChecker.y"
     { 
 
 		(yyval.node) = createNode(EX_OP, 0, NULL, (yyvsp[(2) - (2)].node));
@@ -1765,7 +1790,7 @@ yyreduce:
     break;
 
   case 35:
-#line 258 "ModelChecker.y"
+#line 283 "ModelChecker.y"
     { treeNode* node1 = createNode(NOT_OP, 0, NULL, (yyvsp[(5) - (6)].node));
 
 	treeNode* node2 = createNode(EG_OP, 0, NULL, node1);
@@ -1781,7 +1806,7 @@ yyreduce:
     break;
 
   case 36:
-#line 271 "ModelChecker.y"
+#line 296 "ModelChecker.y"
     { 
 
 		(yyval.node) = createNode(EU_OP, 0, (yyvsp[(3) - (6)].node), (yyvsp[(5) - (6)].node)); }
@@ -1789,7 +1814,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1793 "y.tab.c"
+#line 1818 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2003,7 +2028,7 @@ yyreturn:
 }
 
 
-#line 276 "ModelChecker.y"
+#line 301 "ModelChecker.y"
 
 
 int main() {

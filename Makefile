@@ -6,7 +6,7 @@ LDFLAGS = $(shell pkg-config --libs glib-2.0)
 YACCFILE = ModelChecker.y
 LEXFILE = ModelChecker.l
 OUTPUTFILE = mc
-TREE = parseTree.c kripke.c Set.c
+TREE = parseTree.c kripke.c Set.c model_checker.c
 
 
 

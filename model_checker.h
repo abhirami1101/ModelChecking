@@ -4,10 +4,8 @@
 #include "kripke.h"
 #include "parseTree.h"
 
-bool stateHasLabel(state* s, char prop_var);
-bool evaluateCTL(treeNode* formula, state* s, KripkeStructure* ks);
-bool checkEG(state* s, treeNode* subformula, KripkeStructure* ks, bool visited[MAX_STATES]);
-bool checkEU(state* s, treeNode* left, treeNode* right, KripkeStructure* ks, bool visited[MAX_STATES]) ;
-void evaluateAndPrintCTL(treeNode* formula, KripkeStructure* ks);
+void checkProp(KripkeStructure* ks, treeNode* node);
+void checkAnd(KripkeStructure* ks, treeNode* node);
+void checkNot(KripkeStructure* ks, treeNode* node);
 
 #endif
