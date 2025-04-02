@@ -4,20 +4,18 @@ TRANSITIONS :
 [
 	S0 : S1,
 	S1 : S2,
-	S2 : S2,
-	S2 : S1,
-	S1 : S0
+	S2 : S2
 ]
 LABELS : 
 [
-	S0 : [	p,	q],
-	S1 : [	p ], 
-	S2 : [ q] 
+	S0 : [	p ],
+	S1 : [	p,q ], 
+	S2 : [ p] 
 ]
 endKripke
 
 beginCTL
-EX(EG (q))
+T
 endCTL
 
 

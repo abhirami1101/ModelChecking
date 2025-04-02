@@ -211,7 +211,50 @@ void checkEG(KripkeStructure* ks, treeNode* node) {
     node->sat = Set;
 }
 
+void checkEU(KripkeStructure* ks, treeNode* node){
+	StateNode* states = ks->states;
+    HashSet* Set;
+	Set = (HashSet* ) malloc(sizeof(HashSet));
+    initSet(Set);
 
+    
+    while (states) {
+        state* State = states->s;
+		printf("%s", State->name);
+        if (contains(node->right->sat, State)) {
+            add(Set, State);
+        }
+        states = states->next;
+    }
+
+	bool updated;
+    do {
+        updated = false;
+		states = ks->states; 
+		while (states) {
+			state* State = states->s;
+			if (contains(node->left->sat, State)) {
+				state** adj = State->adj;
+				for (int i = 0; i < State->num_adj; i++){
+					if (contains(Set,adj[i])){
+						if (!contains(Set, State) && contains(Set, adj[i])) { 
+							add(Set, State);
+							updated = true;
+							break;
+						}
+					}
+				}
+	
+			}
+			states = states->next;
+		}
+        
+    } while (updated);
+
+    node->sat = Set;
+
+
+}
 
 
 

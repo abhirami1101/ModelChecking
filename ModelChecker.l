@@ -44,7 +44,7 @@ return PROP_VAR;
 }
 
 [ \t\n]			{}	
-.				{
+.				{ return 0;
 				}		
 
 

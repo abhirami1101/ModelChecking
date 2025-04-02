@@ -55,9 +55,16 @@ KripkeStructure* ks;
 
 Input : kripke ctlformula{ 
 	ks = $1;
+    printf("\n----------------------------\n");
+    printf("The Kripke Structure is \n");
 	printKripke(ks);
 	root_ctl = $2;
+    printf("\n----------------------------\n");
+    printf("The CTL formula is (infix of the tree) \n");
 	printTree(root_ctl, 0);
+    printf("\n----------------------------\n");
+    printf("The States satisfying the formula is \n");
+    printSet(root_ctl->sat);
 	// evaluateAndPrintCTL(root_ctl, ks);
 
 }
@@ -251,6 +258,8 @@ formula
  }
     | TOP { $$ = createNode(PROP_VAR_OP, 'T', NULL, NULL); 
     checkProp(ks, $$);
+    printf("For top : \n");
+    printSet($$->sat);
  }
     | BOTTOM { $$ = createNode(PROP_VAR_OP, 'F', NULL, NULL); 
     checkProp(ks, $$);}
@@ -260,7 +269,7 @@ formula
         treeNode* node2 = createNode(PROP_VAR_OP, 'T', NULL,NULL);
         checkProp(ks, node2);
 		treeNode* node3 = createNode(EU_OP, 0, node2, node1);
-        // checkEU(ks,node3);
+        checkEU(ks,node3);
 		$$ = createNode(NOT_OP, 0, NULL, node3 ); 
         checkNot(ks,$$);
         printf("for AG\n");
@@ -277,7 +286,7 @@ formula
 		treeNode* node1 = createNode(NOT_OP, 0, NULL, $2);
         checkNot(ks, node1);
 	    treeNode* node2 = createNode(EG_OP, 0, NULL, node1);
-        // checkEG(ks, node2);
+        checkEG(ks, node2);
 	    $$ = createNode(NOT_OP, 0, NULL, node2);
         checkNot(ks, $$);
         printf("for AF\n");
@@ -287,8 +296,8 @@ formula
         treeNode* node1 = createNode(PROP_VAR_OP, 'T', NULL,NULL);
         checkProp(ks, node1);
         $$ = createNode(EU_OP, 0, node1, $2);
-        // checkEU(ks, $$);
-        printf("for EU\n");
+        checkEU(ks, $$);
+        printf("for EF\n");
         printSet($$->sat);
 }
     | AX formula  %prec AX { 
@@ -310,22 +319,33 @@ formula
          printSet($$->sat);
 	 }
     | A '[' formula U formula ']'{ treeNode* node1 = createNode(NOT_OP, 0, NULL, $5);
-
+    checkNot(ks, node1);
 	treeNode* node2 = createNode(EG_OP, 0, NULL, node1);
+    checkEG(ks, node2);
 	treeNode* node2a = createNode(NOT_OP, 0, NULL, $3);
+    checkNot(ks, node2a);
     treeNode* node2b = createNode(NOT_OP, 0, NULL, node2);
+    checkNot(ks, node2b);
 	treeNode* node3 = createNode(AND_OP, 0, node2a,node1);
+    checkAnd(ks, node3);
 	treeNode* node4 = createNode(EU_OP, 0, node1, node3);
+    checkEU(ks, node4);
     treeNode* node4a = createNode(NOT_OP, 0, NULL, node4);
+    checkNot(ks, node4a);
     treeNode* node5a = createNode(AND_OP, 0, node4a, node2b);
+    checkAnd(ks, node5a);
 	treeNode* node5 = createNode(NOT_OP, 0, NULL, node5a); 
+    checkNot(ks, node5);
 	$$ = createNode(NOT_OP, 0, NULL, node5);
+    checkNot(ks, $$);
+    printf("for AU : \n");
+    printSet($$->sat);
 	 }
 
     | E '[' formula U formula ']' { 
 
 		$$ = createNode(EU_OP, 0, $3, $5);
-        // checkEU(ks, $$);
+        checkEU(ks, $$);
         printf("for EU\n");
         printSet($$->sat); }
 
@@ -333,10 +353,10 @@ formula
 %%
 
 int main() {
-    // printf("Enter CTL formula: ");
+
     yyparse();
 	printf("\nTotal no of nodes = %d\n", node_id);
-	// bottomUpParser(root);
+
     return 0;
 }
 

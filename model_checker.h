@@ -10,6 +10,7 @@ void checkNot(KripkeStructure* ks, treeNode* node);
 void checkEX(KripkeStructure* ks, treeNode* node);
 bool traverseEG(state* State, treeNode* node, HashSet* visited);
 void checkEG(KripkeStructure* ks, treeNode* node);
+void checkEU(KripkeStructure* ks, treeNode* node);
 
 
 #endif
