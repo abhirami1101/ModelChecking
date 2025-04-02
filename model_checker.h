@@ -7,5 +7,6 @@
 void checkProp(KripkeStructure* ks, treeNode* node);
 void checkAnd(KripkeStructure* ks, treeNode* node);
 void checkNot(KripkeStructure* ks, treeNode* node);
+void checkEX(KripkeStructure* ks, treeNode* node);
 
 #endif

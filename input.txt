@@ -17,7 +17,7 @@ LABELS :
 endKripke
 
 beginCTL
-p | q
+EX((~p)&(~q))
 endCTL
 
 

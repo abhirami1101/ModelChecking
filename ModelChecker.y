@@ -256,29 +256,58 @@ formula
     checkProp(ks, $$);}
     | AG formula  %prec AG  { 
 		treeNode* node1 = createNode(NOT_OP, 0, NULL, $2);
+        checkNot(ks,node1);
         treeNode* node2 = createNode(PROP_VAR_OP, 'T', NULL,NULL);
+        checkProp(ks, node2);
 		treeNode* node3 = createNode(EU_OP, 0, node2, node1);
+        // checkEU(ks,node3);
 		$$ = createNode(NOT_OP, 0, NULL, node3 ); 
+        checkNot(ks,$$);
+        printf("for AG\n");
+        printSet($$->sat);
 }
-    | EG formula  %prec EG { $$ = createNode(EG_OP, 0, NULL, $2);
+    | EG formula  %prec EG { 
+        $$ = createNode(EG_OP, 0, NULL, $2);
+        // checkEG(ks, $$);
+        printf("for EG\n");
+        printSet($$->sat);
  }
     | AF formula  %prec AF { 
 
 		treeNode* node1 = createNode(NOT_OP, 0, NULL, $2);
-	treeNode* node2 = createNode(EG_OP, 0, NULL, node1);
-	$$ = createNode(NOT_OP, 0, NULL, node2);
+        checkNot(ks, node1);
+	    treeNode* node2 = createNode(EG_OP, 0, NULL, node1);
+        // checkEG(ks, node2);
+	    $$ = createNode(NOT_OP, 0, NULL, node2);
+        checkNot(ks, $$);
+        printf("for AF\n");
+        printSet($$->sat);
 	 }
-    | EF formula  %prec EF { $$ = createNode(EU_OP, 0, createNode(PROP_VAR_OP, 'T', NULL,NULL), $2); 
+    | EF formula  %prec EF { 
+        treeNode* node1 = createNode(PROP_VAR_OP, 'T', NULL,NULL);
+        checkProp(ks, node1);
+        $$ = createNode(EU_OP, 0, node1, $2);
+        // checkEU(ks, $$);
+        printf("for EU\n");
+        printSet($$->sat);
 }
     | AX formula  %prec AX { 
 
 		treeNode* node0 = createNode(NOT_OP, 0, NULL, $2);
+        checkNot(ks, node0);
 		treeNode* node1 = createNode(EX_OP, 0, NULL, node0);
+        checkEX(ks,node1);
 		 $$ = createNode(NOT_OP, 0, NULL, node1);
+         checkNot(ks,$$);
+         printf("for AX : \n");
+         printSet($$->sat);
 		}
     | EX formula  %prec EX { 
 
 		$$ = createNode(EX_OP, 0, NULL, $2);
+        checkEX(ks,$$);
+        printf("for EX : \n");
+         printSet($$->sat);
 	 }
     | A '[' formula U formula ']'{ treeNode* node1 = createNode(NOT_OP, 0, NULL, $5);
 
@@ -295,7 +324,10 @@ formula
 
     | E '[' formula U formula ']' { 
 
-		$$ = createNode(EU_OP, 0, $3, $5); }
+		$$ = createNode(EU_OP, 0, $3, $5);
+        // checkEU(ks, $$);
+        printf("for EU\n");
+        printSet($$->sat); }
 
 
 %%

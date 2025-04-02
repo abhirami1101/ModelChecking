@@ -66,6 +66,28 @@ void checkNot(KripkeStructure* ks, treeNode* node){
 	}
 }
 
+void checkEX(KripkeStructure* ks, treeNode* node){
+	StateNode* states = ks->states;
+	while(states){
+		state* State = states->s;
+		state** adj = State->adj;
+		int num = State->num_adj;
+		int flag = 0;
+		for(int i = 0; i < num; i++){
+			if (contains(node->right->sat, adj[i]))
+			{
+				flag = 1;
+				break;
+			}
+		}
+		if (flag == 1){
+			add(node->sat, State);
+		}
+		states = states->next;
+
+	}
+
+}
 
 
 

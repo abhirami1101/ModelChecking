@@ -493,7 +493,7 @@ static const yytype_uint16 yyrline[] =
        0,    56,    56,    65,    98,   102,   112,   123,   127,   131,
      140,   144,   156,   157,   163,   171,   175,   187,   193,   197,
      205,   210,   211,   215,   228,   241,   246,   252,   255,   257,
-     263,   265,   271,   273,   279,   283,   296
+     269,   275,   286,   294,   305,   312,   325
 };
 #endif
 
@@ -1743,54 +1743,83 @@ yyreduce:
 #line 257 "ModelChecker.y"
     { 
 		treeNode* node1 = createNode(NOT_OP, 0, NULL, (yyvsp[(2) - (2)].node));
+        checkNot(ks,node1);
         treeNode* node2 = createNode(PROP_VAR_OP, 'T', NULL,NULL);
+        checkProp(ks, node2);
 		treeNode* node3 = createNode(EU_OP, 0, node2, node1);
+        // checkEU(ks,node3);
 		(yyval.node) = createNode(NOT_OP, 0, NULL, node3 ); 
+        checkNot(ks,(yyval.node));
+        printf("for AG\n");
+        printSet((yyval.node)->sat);
 }
     break;
 
   case 30:
-#line 263 "ModelChecker.y"
-    { (yyval.node) = createNode(EG_OP, 0, NULL, (yyvsp[(2) - (2)].node));
+#line 269 "ModelChecker.y"
+    { 
+        (yyval.node) = createNode(EG_OP, 0, NULL, (yyvsp[(2) - (2)].node));
+        // checkEG(ks, $$);
+        printf("for EG\n");
+        printSet((yyval.node)->sat);
  }
     break;
 
   case 31:
-#line 265 "ModelChecker.y"
+#line 275 "ModelChecker.y"
     { 
 
 		treeNode* node1 = createNode(NOT_OP, 0, NULL, (yyvsp[(2) - (2)].node));
-	treeNode* node2 = createNode(EG_OP, 0, NULL, node1);
-	(yyval.node) = createNode(NOT_OP, 0, NULL, node2);
+        checkNot(ks, node1);
+	    treeNode* node2 = createNode(EG_OP, 0, NULL, node1);
+        // checkEG(ks, node2);
+	    (yyval.node) = createNode(NOT_OP, 0, NULL, node2);
+        checkNot(ks, (yyval.node));
+        printf("for AF\n");
+        printSet((yyval.node)->sat);
 	 }
     break;
 
   case 32:
-#line 271 "ModelChecker.y"
-    { (yyval.node) = createNode(EU_OP, 0, createNode(PROP_VAR_OP, 'T', NULL,NULL), (yyvsp[(2) - (2)].node)); 
+#line 286 "ModelChecker.y"
+    { 
+        treeNode* node1 = createNode(PROP_VAR_OP, 'T', NULL,NULL);
+        checkProp(ks, node1);
+        (yyval.node) = createNode(EU_OP, 0, node1, (yyvsp[(2) - (2)].node));
+        // checkEU(ks, $$);
+        printf("for EU\n");
+        printSet((yyval.node)->sat);
 }
     break;
 
   case 33:
-#line 273 "ModelChecker.y"
+#line 294 "ModelChecker.y"
     { 
 
 		treeNode* node0 = createNode(NOT_OP, 0, NULL, (yyvsp[(2) - (2)].node));
+        checkNot(ks, node0);
 		treeNode* node1 = createNode(EX_OP, 0, NULL, node0);
+        checkEX(ks,node1);
 		 (yyval.node) = createNode(NOT_OP, 0, NULL, node1);
+         checkNot(ks,(yyval.node));
+         printf("for AX : \n");
+         printSet((yyval.node)->sat);
 		}
     break;
 
   case 34:
-#line 279 "ModelChecker.y"
+#line 305 "ModelChecker.y"
     { 
 
 		(yyval.node) = createNode(EX_OP, 0, NULL, (yyvsp[(2) - (2)].node));
+        checkEX(ks,(yyval.node));
+        printf("for EX : \n");
+         printSet((yyval.node)->sat);
 	 }
     break;
 
   case 35:
-#line 283 "ModelChecker.y"
+#line 312 "ModelChecker.y"
     { treeNode* node1 = createNode(NOT_OP, 0, NULL, (yyvsp[(5) - (6)].node));
 
 	treeNode* node2 = createNode(EG_OP, 0, NULL, node1);
@@ -1806,15 +1835,18 @@ yyreduce:
     break;
 
   case 36:
-#line 296 "ModelChecker.y"
+#line 325 "ModelChecker.y"
     { 
 
-		(yyval.node) = createNode(EU_OP, 0, (yyvsp[(3) - (6)].node), (yyvsp[(5) - (6)].node)); }
+		(yyval.node) = createNode(EU_OP, 0, (yyvsp[(3) - (6)].node), (yyvsp[(5) - (6)].node));
+        // checkEU(ks, $$);
+        printf("for EU\n");
+        printSet((yyval.node)->sat); }
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1818 "y.tab.c"
+#line 1850 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2028,7 +2060,7 @@ yyreturn:
 }
 
 
-#line 301 "ModelChecker.y"
+#line 333 "ModelChecker.y"
 
 
 int main() {
