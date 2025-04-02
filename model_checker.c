@@ -89,6 +89,128 @@ void checkEX(KripkeStructure* ks, treeNode* node){
 
 }
 
+// void dfsEG(state* State, treeNode* node, HashSet* visited) {
+//     if (contains(visited, State)) return;
+//     add(visited, State);
+//     add(node->sat, State);
+//     for (int i = 0; i < State->num_adj; i++) {
+//         if (contains(node->right->sat, State->adj[i])) {
+//             dfsEG(State->adj[i], node, visited);
+//         }
+//     }
+// }
+
+// bool traverseEG(state* State, treeNode* node,HashSet* visited){
+// 	if(!contains(visited, State)){
+// 		add(visited, State);
+// 		state** adj = State->adj;
+// 		int num = State->num_adj;
+// 		for (int i = 0; i < num; i++){
+// 			if(contains(node->right, adj[i])){
+// 			if (traverseEG(adj[i], node, visited)){
+// 				return true;
+// 			}
+// 		}
+// 		}
+
+// 	}
+// 	else{
+// 		return false;
+// 	}
+// 	return false;
+// }
+
+// void checkEG(KripkeStructure* ks, treeNode* node){
+// 	StateNode* states = ks->states;
+// 	HashSet* Set;
+// 	Set = (HashSet* ) malloc(sizeof(HashSet));
+// 	initSet(Set);
+//     while (states) {
+//         state* State = states->s;
+//         if (contains(node->right->sat, State)) {
+// 			add(Set,State);
+//         }
+//         states = states->next;
+//     }
+// 	int update = 0;
+// 	while(true){
+// 		for (int i = 0; i < TABLE_SIZE; i++) {
+// 			Node* element = Set->buckets[i];
+// 			Node* prev = NULL;
+			
+// 			while (!element) {
+// 				HashSet* visited = (HashSet* ) malloc(sizeof(HashSet));
+// 				initSet(visited);
+// 				if (!traverseEG(element->key, node, visited)) {
+// 					removeElement(Set, element->key);
+// 				} else {
+// 					prev = element;
+// 					element = element->next;
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
+bool traverseEG(state* State, treeNode* node, HashSet* visited) {
+    if (contains(visited, State)) return true;
+
+    add(visited, State);
+    state** adj = State->adj;
+    int num = State->num_adj;
+    for (int i = 0; i < num; i++) {
+        if (contains(node->right->sat, adj[i])) {
+            if (traverseEG(adj[i], node, visited)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+void checkEG(KripkeStructure* ks, treeNode* node) {
+    StateNode* states = ks->states;
+    HashSet* Set;
+	Set = (HashSet* ) malloc(sizeof(HashSet));
+    initSet(Set);
+
+    
+    while (states) {
+        state* State = states->s;
+        if (contains(node->right->sat, State)) {
+            add(Set, State);
+        }
+        states = states->next;
+    }
+
+    bool updated;
+    do {
+        updated = false;
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            Node* element = Set->buckets[i];
+            Node* prev = NULL;
+
+            while (element) {
+                HashSet visited;
+                initSet(&visited);
+
+                if (!traverseEG(element->key, node, &visited)) {
+                    Node* toRemove = element;
+                    element = element->next;
+                    removeElement(Set, toRemove->key);
+                    updated = true;
+                } else {
+                    prev = element;
+                    element = element->next;
+                }
+            }
+        }
+    } while (updated);
+
+    node->sat = Set;
+}
+
 
 
 

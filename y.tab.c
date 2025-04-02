@@ -1759,7 +1759,7 @@ yyreduce:
 #line 269 "ModelChecker.y"
     { 
         (yyval.node) = createNode(EG_OP, 0, NULL, (yyvsp[(2) - (2)].node));
-        // checkEG(ks, $$);
+        checkEG(ks, (yyval.node));
         printf("for EG\n");
         printSet((yyval.node)->sat);
  }

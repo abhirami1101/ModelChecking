@@ -268,7 +268,7 @@ formula
 }
     | EG formula  %prec EG { 
         $$ = createNode(EG_OP, 0, NULL, $2);
-        // checkEG(ks, $$);
+        checkEG(ks, $$);
         printf("for EG\n");
         printSet($$->sat);
  }

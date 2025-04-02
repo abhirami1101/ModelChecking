@@ -26,6 +26,7 @@ void initSet(HashSet* set) {
     for (int i = 0; i < TABLE_SIZE; i++) {
         set->buckets[i] = NULL;
     }
+    set->count = 0;
 }
 
 
@@ -56,6 +57,7 @@ void add(HashSet* set, state* key) {
     newNode->key = key;
     newNode->next = set->buckets[index];
     set->buckets[index] = newNode;
+    set->count++;
 }
 
 
@@ -68,11 +70,16 @@ void removeElement(HashSet* set, state* key) {
             if (prev) prev->next = node->next;
             else set->buckets[index] = node->next;
             free(node);
+            set->count--; 
             return;
         }
         prev = node;
         node = node->next;
     }
+}
+
+int hashset_size(HashSet* set) {
+    return set->count;
 }
 
 void printSet(HashSet* set) {
