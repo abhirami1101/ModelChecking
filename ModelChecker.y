@@ -220,8 +220,11 @@ formula
     : LPAREN formula RPAREN { $$ = $2; }
     | formula AND formula { $$ = createNode(AND_OP, 0, $1, $3); 
     checkAnd(ks,$$);
-    printf("For and : \n");
-    printSet($$->sat);}
+    // printf("For and : \n");
+    // printSet($$->sat);
+    printf("----------Node %d--------\n", $$->node_id);
+    printTree($$,0);
+    }
     | formula OR formula {
         treeNode* node1 = createNode(NOT_OP, 0, NULL, $1);
         checkNot(ks,node1);
@@ -231,8 +234,10 @@ formula
         checkAnd(ks,node3);
 		$$ = createNode(NOT_OP, 0, NULL, node3); 
         checkNot(ks,$$);
-        printf("For or : \n");
-        printSet($$->sat);
+        printf("----------Node %d--------\n", $$->node_id);
+        printTree($$,0);
+        // printf("For or : \n");
+        // printSet($$->sat);
 
 }
     | formula IMPLIES formula { 
@@ -243,29 +248,40 @@ formula
         checkAnd(ks,node2);
 		$$ = createNode(NOT_OP, 0, NULL, node2);
         checkNot(ks,$$);
-        printf("For implies : \n");
-        printSet($$->sat);
+        printf("----------Node %d--------\n", $$->node_id);
+        printTree($$,0);
+        // printf("For implies : \n");
+        // printSet($$->sat);
 
 
  }
     | NOT formula %prec NOT { $$ = createNode(NOT_OP, 0, NULL, $2); 
     checkNot(ks,$$);
-    printf("For not : \n");
-    printSet($$->sat);
+    printf("----------Node %d--------\n", $$->node_id);
+    printTree($$,0);
+    // printf("For not : \n");
+    // printSet($$->sat);
 }
     | PROP_VAR { $$ = createNode(PROP_VAR_OP, $1, NULL, NULL); 
     // printKripke(ks);
-    checkProp(ks, $$); 
-    printf("For variable : \n");
-    printSet($$->sat);
+    checkProp(ks, $$);
+    printf("----------Node %d--------\n", $$->node_id);
+    printTree($$,0); 
+    // printf("For variable : \n");
+    // printSet($$->sat);
  }
     | TOP { $$ = createNode(PROP_VAR_OP, 'T', NULL, NULL); 
     checkProp(ks, $$);
-    printf("For top : \n");
-    printSet($$->sat);
+    printf("----------Node %d--------\n", $$->node_id);
+    printTree($$,0);
+    // printf("For top : \n");
+    // printSet($$->sat);
  }
     | BOTTOM { $$ = createNode(PROP_VAR_OP, 'F', NULL, NULL); 
-    checkProp(ks, $$);}
+    checkProp(ks, $$);
+    printf("----------Node %d--------\n", $$->node_id);
+    printTree($$,0);
+    }
     | AG formula  %prec AG  { 
 		treeNode* node1 = createNode(NOT_OP, 0, NULL, $2);
         checkNot(ks,node1);
@@ -275,14 +291,18 @@ formula
         checkEU(ks,node3);
 		$$ = createNode(NOT_OP, 0, NULL, node3 ); 
         checkNot(ks,$$);
-        printf("for AG\n");
-        printSet($$->sat);
+        printf("----------Node %d--------\n", $$->node_id);
+        printTree($$,0);
+        // printf("for AG\n");
+        // printSet($$->sat);
 }
     | EG formula  %prec EG { 
         $$ = createNode(EG_OP, 0, NULL, $2);
         checkEG(ks, $$);
-        printf("for EG\n");
-        printSet($$->sat);
+        printf("----------Node %d--------\n", $$->node_id);
+        printTree($$,0);
+        // printf("for EG\n");
+        // printSet($$->sat);
  }
     | AF formula  %prec AF { 
 
@@ -292,16 +312,20 @@ formula
         checkEG(ks, node2);
 	    $$ = createNode(NOT_OP, 0, NULL, node2);
         checkNot(ks, $$);
-        printf("for AF\n");
-        printSet($$->sat);
+        printf("----------Node %d--------\n", $$->node_id);
+        printTree($$,0);
+        // printf("for AF\n");
+        // printSet($$->sat);
 	 }
     | EF formula  %prec EF { 
         treeNode* node1 = createNode(PROP_VAR_OP, 'T', NULL,NULL);
         checkProp(ks, node1);
         $$ = createNode(EU_OP, 0, node1, $2);
         checkEU(ks, $$);
-        printf("for EF\n");
-        printSet($$->sat);
+        printf("----------Node %d--------\n", $$->node_id);
+        printTree($$,0);
+        // printf("for EF\n");
+        // printSet($$->sat);
 }
     | AX formula  %prec AX { 
 
@@ -311,15 +335,19 @@ formula
         checkEX(ks,node1);
 		 $$ = createNode(NOT_OP, 0, NULL, node1);
          checkNot(ks,$$);
-         printf("for AX : \n");
-         printSet($$->sat);
+         printf("----------Node %d--------\n", $$->node_id);
+        printTree($$,0);
+        //  printf("for AX : \n");
+        //  printSet($$->sat);
 		}
     | EX formula  %prec EX { 
 
 		$$ = createNode(EX_OP, 0, NULL, $2);
         checkEX(ks,$$);
-        printf("for EX : \n");
-         printSet($$->sat);
+        printf("----------Node %d--------\n", $$->node_id);
+        printTree($$,0);
+        // printf("for EX : \n");
+        //  printSet($$->sat);
 	 }
     | A '[' formula U formula ']'{ treeNode* node1 = createNode(NOT_OP, 0, NULL, $5);
     checkNot(ks, node1);
@@ -341,16 +369,21 @@ formula
     checkNot(ks, node5);
 	$$ = createNode(NOT_OP, 0, NULL, node5);
     checkNot(ks, $$);
-    printf("for AU : \n");
-    printSet($$->sat);
+    printf("----------Node %d--------\n", $$->node_id);
+    printTree($$,0);
+    // printf("for AU : \n");
+    // printSet($$->sat);
 	 }
 
     | E '[' formula U formula ']' { 
 
 		$$ = createNode(EU_OP, 0, $3, $5);
         checkEU(ks, $$);
-        printf("for EU\n");
-        printSet($$->sat); }
+        printf("----------Node %d--------\n", $$->node_id);
+        printTree($$,0);
+        // printf("for EU\n");
+        // printSet($$->sat); 
+        }
 
 
 %%

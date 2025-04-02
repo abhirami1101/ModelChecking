@@ -220,7 +220,7 @@ void checkEU(KripkeStructure* ks, treeNode* node){
     
     while (states) {
         state* State = states->s;
-		printf("%s", State->name);
+		// printf("%s", State->name);
         if (contains(node->right->sat, State)) {
             add(Set, State);
         }
