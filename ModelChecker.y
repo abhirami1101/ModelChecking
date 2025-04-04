@@ -188,13 +188,15 @@ label_state :  STATE_VAR ':' '[' prop_list ']'  {
         fprintf(stderr, "Memory allocation failed!\n");
         exit(1);
     }
+
     label->state = strdup($1);
     label->next = NULL; 
 	label->label = $4; 
     $$ = label;
 };
 
-prop_list : prop ',' prop_list {
+prop_list : { $$ = NULL;}
+        | prop ',' prop_list {
 	$$ = $1;
 	while ($1->next)
 		$1 = $1->next;
@@ -204,8 +206,7 @@ prop_list : prop ',' prop_list {
     $$ = $1;
 };
 
-prop : {}
-    | PROP_VAR {
+prop : PROP_VAR {
     label* prop = (label*) malloc(sizeof(label));
 	prop->prop_var = $1;
 	prop->next = NULL;

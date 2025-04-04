@@ -12,24 +12,24 @@
 
 
 void checkProp(KripkeStructure* ks, treeNode* node){
-	StateNode* states = ks->states;
-	if (node->prop_var == 'T'){
-		while(states){
+	StateNode* states = ks->states; // for checking the states
+	if (node->prop_var == 'T'){ // if the formula to be checked is T
+		while(states){ // we can add all the states to the formula
 			state* State = states->s;
-			add(node->sat, State);		
+			add(node->sat, State);	// for adding the state to satisfying set of the formula	
 			states = states->next;
 		}
 		return;
 	}
-	if (node->prop_var == 'F'){
+	if (node->prop_var == 'F'){ // if the formula is F, no states would be added
 		return;
 	}
-	while(states){
-		state* State = states->s;
-		label* label = State->labelset;
-		while (label){
-			if (label->prop_var == node->prop_var){
-				add(node->sat, State);
+	while(states){ // if not any of the above, traverse through states
+		state* State = states->s; 
+		label* label = State->labelset; // get the label set of that state
+		while (label){ // traverse through the labels
+			if (label->prop_var == node->prop_var){ // if label = the prop variable
+				add(node->sat, State); // add the state to the Satisfying set of the formula node
 				break;
 			}
 			label = label->next;
@@ -40,12 +40,14 @@ void checkProp(KripkeStructure* ks, treeNode* node){
 }
 
 void checkAnd(KripkeStructure* ks, treeNode* node){
-	StateNode* states = ks->states;
-	while(states){
+	StateNode* states = ks->states; // for checking the states
+	while(states){ 
 		state* State = states->s;
-		bool flag1 = contains(node->left->sat,State);
-		bool flag2 = contains(node->right->sat,State);
-		if (flag1 && flag2){
+		bool flag1 = contains(node->left->sat,State); // check if the formula1 is satisfied by the state
+		// if flag1 is true, that means the state would be present in the satisying set of the formula1
+		bool flag2 = contains(node->right->sat,State); // check if the formula2 is satisfied by the state
+		// if flag2 is true, that means the state would be present in the satisying set of the formula2
+		if (flag1 && flag2){ // if both flags are true, we can add the state to the satisying set of the formula
 			add(node->sat, State);
 		}
 		states = states->next;
@@ -152,7 +154,8 @@ void checkEX(KripkeStructure* ks, treeNode* node){
 // 	}
 // }
 
-bool traverseEG(state* State, treeNode* node, HashSet* visited) {
+bool traverseEG(state* State, treeNode* node, HashSet* visited) { // returns true 
+	// if theres a path from that state where in all states in the path, satisying the formula 
     if (contains(visited, State)) return true;
 
     add(visited, State);

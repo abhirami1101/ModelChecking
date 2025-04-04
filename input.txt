@@ -22,7 +22,7 @@ LABELS :
 endKripke
 
 beginCTL
-EG(~q)
+EG (AF p)
 endCTL
 
 
