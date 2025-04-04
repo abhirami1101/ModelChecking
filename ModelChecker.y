@@ -204,12 +204,14 @@ prop_list : prop ',' prop_list {
     $$ = $1;
 };
 
-prop : PROP_VAR {
+prop : {}
+    | PROP_VAR {
     label* prop = (label*) malloc(sizeof(label));
 	prop->prop_var = $1;
 	prop->next = NULL;
 	$$ = prop;
 };
+
 
 
 ctlformula : BEGCTL formula ENDCTL {

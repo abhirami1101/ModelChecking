@@ -1,21 +1,28 @@
 beginKripke
-STATES : [S0, S1, S2]
+STATES : [S0, S1, S2, S3, S4]
 TRANSITIONS : 
 [
 	S0 : S1,
 	S1 : S2,
 	S1 : S1,
-	S2 : S2
+	S2 : S2,
+	S2 : S3,
+	S3 : S3,
+	S4 : S3 
 ]
 LABELS : 
 [
 	S0 : [ p ],
-	S1 : [	p ]
+	S1 : [ p ],
+	S2 : [p],
+	S3 : [q],
+	S4 : [ ]
+
 ]
 endKripke
 
 beginCTL
-AG (~p)
+EG(~q)
 endCTL
 
 
