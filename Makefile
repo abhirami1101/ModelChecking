@@ -1,6 +1,5 @@
 CC = gcc
-CFLAGS = -lm $(shell pkg-config --cflags glib-2.0)
-LDFLAGS = $(shell pkg-config --libs glib-2.0)
+
 
 
 YACCFILE = ModelChecker.y
@@ -19,7 +18,7 @@ all : $(OUTPUTFILE)
 
 $(OUTPUTFILE) : $(PARSERCFILE) $(FLEX) $(TREE)
 	mkdir -p bin
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+	$(CC) $(CFLAGS)  -o $@ $^
 
 
 $(PARSERCFILE) $(PARSERHEADER) : $(YACCFILE)
